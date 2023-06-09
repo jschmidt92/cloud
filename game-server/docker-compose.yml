@@ -1,0 +1,24 @@
+services:
+  arma3-server:
+    build: .
+    image: sogdev/arma3server
+    container_name: Arma3Server
+    ports:
+      - 2302-2306:2302-2306
+      - 2402-2406:2402-2406
+    volumes:
+      - './missions:/arma3/mpmissions'
+      - './configs:/arma3/configs'
+      - './mods:/arma3/mods'
+      - './servermods:/arma3/servermods'
+    env_file: .env
+    restart: unless-stopped
+    depends_on:
+      - arma-redis
+
+  arma-redis:
+    image: redis:alpine
+    container_name: ArmARedis
+    command: --requirepass ${REDIS_PASSWORD}
+    ports:
+      - 6379:6379

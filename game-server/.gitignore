@@ -1,0 +1,4 @@
+missions/**/*
+mods/**/*
+servermods/**/*
+.env

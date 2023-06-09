@@ -1,0 +1,6 @@
+debugpy
+fastapi
+pydantic
+redis
+requests
+uvicorn
