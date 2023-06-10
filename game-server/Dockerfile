@@ -2,6 +2,7 @@ FROM ubuntu:latest
 
 COPY requirements.txt .
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apt-get update && \
   apt-get install -y --no-install-recommends \
   ca-certificates \
@@ -17,18 +18,22 @@ RUN apt-get update && \
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
   locale-gen
 
-ENV LANG=en_US.UTF-8
-ENV LANGUAGE=en_US:en
-ENV LC_ALL=en_US.UTF-8
 ENV ARMA_BINARY=./arma3server
+ENV ARMA_CDLC=
 ENV ARMA_CONFIG=main.cfg
+ENV ARMA_LIMITFPS=1000
 ENV ARMA_PARAMS=
 ENV ARMA_PROFILE=main
 ENV ARMA_WORLD=empty
-ENV ARMA_LIMITFPS=1000
-ENV PORT=2302
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 ENV MODS_LOCAL=true
 ENV MODS_PRESET=
+ENV PORT=2302
+ENV SKIP_INSTALL=false
+ENV STEAM_BRANCH=public
+ENV STEAM_BRANCH_PASSWORD=
 
 RUN pip3 install --no-cache-dir -r requirements.txt
 
