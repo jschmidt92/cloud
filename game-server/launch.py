@@ -1,5 +1,4 @@
 import os
-import re
 import subprocess
 from string import Template
 
@@ -53,7 +52,7 @@ launch = "{} -limitFPS={} -world={} {} {}".format(
 
 launch += ' -config="/arma3/configs/{}"'.format(CONFIG_FILE)
 launch += ' -port={} -name="{}" -profiles="/arma3/configs/profiles"'.format(
-    os.environ["ARMA_PORT"], os.environ["ARMA_PROFILE"]
+    os.environ["PORT"], os.environ["ARMA_PROFILE"]
 )
 
 if os.path.exists("servermods"):

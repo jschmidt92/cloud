@@ -3,6 +3,7 @@ services:
     build: .
     image: sogdev/arma3server
     container_name: Arma3Server
+    network_mode: host
     ports:
       - 2302-2306:2302-2306
       - 2402-2406:2402-2406
@@ -22,3 +23,4 @@ services:
     command: --requirepass ${REDIS_PASSWORD}
     ports:
       - 6379:6379
+    env_file: .env

@@ -5,12 +5,13 @@ COPY requirements.txt .
 RUN apt-get update && \
   apt-get install -y --no-install-recommends \
   ca-certificates \
-  wget \
   lib32gcc-s1 \
   libcurl4 \
   locales \
+  net-tools \
   python3 \
-  python3-pip && \
+  python3-pip \
+  wget && \
   rm -rf /var/lib/apt/lists/*
 
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
