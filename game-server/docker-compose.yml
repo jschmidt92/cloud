@@ -1,12 +1,14 @@
+version: '3.8'
 services:
-  arma3-server:
+  arma-server:
+    privileged: true
     build: .
     image: sogdev/arma3server
+    platform: linux/amd64
     container_name: Arma3Server
     network_mode: host
     ports:
-      - 2302-2306:2302-2306
-      - 2402-2406:2402-2406
+      - 2302-2306:2302-2306/udp
     volumes:
       - './missions:/arma3/mpmissions'
       - './configs:/arma3/configs'

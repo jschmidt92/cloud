@@ -4,12 +4,8 @@ import subprocess
 import requests
 import keys
 
-from dotenv import load_dotenv
-
 WORKSHOP = "steamapps/workshop/content/107410/"
-USER_AGENT = "Mozilla/5.0"
-
-load_dotenv(".env")
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36"  # noqa: E501
 
 
 def download(mods):

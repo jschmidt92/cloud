@@ -1,13 +1,12 @@
 import os
+import re
 import subprocess
-from string import Template
-
 import local
 import workshop
 
 
 def mod_param(name, mods):
-    return ' -{}= "{}" '.format(name, ";".join(mods))
+    return ' -{}="{}" '.format(name, ";".join(mods))
 
 
 def env_defined(key):
@@ -39,12 +38,7 @@ if os.environ["SKIP_INSTALL"] in ["", "false"]:
         steamcmd.extend(["-beta", os.environ["STEAM_BRANCH"]])
     if env_defined("STEAM_BRANCH_PASSWORD"):
         steamcmd.extend(["-betapassword", os.environ["STEAM_BRANCH_PASSWORD"]])
-    steamcmd.extend(
-        [
-            "validate",
-            "+quit",
-        ]
-    )
+    steamcmd.extend(["validate", "+quit"])
     subprocess.call(steamcmd)
 
 mods = []
@@ -67,7 +61,44 @@ if os.environ["ARMA_CDLC"] != "":
     for cdlc in os.environ["ARMA_CDLC"].split(";"):
         launch += " -mod={}".format(cdlc)
 
-launch += ' -config="/arma3/configs/{}"'.format(CONFIG_FILE)
+clients = int(os.environ["HEADLESS_CLIENTS"])
+print("Headless Clients:", clients)
+
+if clients != 0:
+    with open("arma3/configs/{}".format(CONFIG_FILE)) as config:
+        data = config.read()
+        regex = r"(.+?)(?:\s+)?=(?:\s+)?(.+?)(?:$|\/|;)"
+
+        config_values = {}
+
+        matches = re.finditer(regex, data, re.MULTILINE)
+        for matchNum, match in enumerate(matches, start=1):
+            config_values[match.group(1).lower()] = match.group(2)
+
+        if "headlessclients[]" not in config_values:
+            data += '\nheadlessclients[] = {"127.0.0.1"};\n'
+        if "localclient[]" not in config_values:
+            data += '\nlocalclient[] = {"127.0.0.1"};\n'
+
+        with open("/tmp/arma3.cfg", "w") as tmp_config:
+            tmp_config.write(data)
+        launch += ' -config="/tmp/arma3.cfg"'
+
+    client_launch = launch
+    client_launch += " -client -connect=127.0.0.1"
+    if "password" in config_values:
+        client_launch += " -password={}".format(config_values["password"])
+
+    for i in range(0, clients):
+        hc_launch = client_launch + ' -name="{}-hc-{}"'.format(
+            os.environ["ARMA_PROFILE"], i
+        )
+        print("LAUNCHING ARMA CLIENT {} WITH".format(i), hc_launch)
+        subprocess.Popen(hc_launch, shell=True)
+
+else:
+    launch += ' -config="/arma3/configs/{}"'.format(CONFIG_FILE)
+
 launch += ' -port={} -name="{}" -profiles="/arma3/configs/profiles"'.format(
     os.environ["PORT"], os.environ["ARMA_PROFILE"]
 )
@@ -75,5 +106,5 @@ launch += ' -port={} -name="{}" -profiles="/arma3/configs/profiles"'.format(
 if os.path.exists("servermods"):
     launch += mod_param("serverMod", local.mods("servermods"))
 
-print("LAUNCHING ARMA SERVER WITH", launch, flush=True)
+print("Launching Arma Server With", launch, flush=True)
 os.system(launch)

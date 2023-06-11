@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException, Path
 from pydantic import BaseModel
 from typing import Optional
 
@@ -34,8 +34,11 @@ class User(BaseModel):
 
 
 with open("users.json", "r") as f:
-    users = json.load(f)["users"]
+    users = json.load(f)
 
+@app.get("/")
+def read_root():
+  return "Hello World!"
 
 @app.get("/user/{u_id}", status_code=200)
 def get_user(u_id: int):
@@ -72,3 +75,32 @@ def add_user(user: User):
         json.dump(users, f)
 
     return new_user
+
+@app.put("/changeUser", status_code=204)
+def change_user(user: User):
+  new_user = {
+    "id": user.id,
+    "name": user.name,
+    "age": user.age,
+    "gender": user.gender
+  }
+
+  user_list = [u for u in users if u['id'] == user.id]
+  if len(user_list) > 0:
+    user.remove(user_list[0])
+    user.append(new_user)
+    with open('user.json', 'w') as f:
+      json.dump(users, f)
+    return new_user
+  else:
+    return HTTPException(status_code=404, detail=f"User with id {user.id} does not exist!")
+
+@app.delete("/deleteUser/{u_id}")
+def delete_person(u_id: int):
+  user = [u for u in users if u['id'] == u_id]
+  if len(user) > 0:
+    users.remove(user[0])
+    with open('users.json', 'w') as f:
+      json.dump(users, f)
+  else:
+    raise HTTPException(status_code=404, detail=f"There is no user with id {u_id}")

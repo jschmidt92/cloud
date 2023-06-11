@@ -4,20 +4,14 @@ import requests
 import json
 import shutil
 
-# Load environment variables from the .env file
-from dotenv import load_dotenv
-
-# Load environment variables from the .env file
-load_dotenv(".env")
-
-# Access the environment variables using os.environ
+# Set environment variables
 ARMA3_PATH = os.environ.get("ARMA3_PATH")
 APP_ID = os.environ.get("APP_ID")
 COLLECTION_ID = os.environ.get("COLLECTION_ID")
 REPO_PATH = os.environ.get("REPO_PATH")
 STEAM_API_KEY = os.environ.get("STEAM_API_KEY")
-STEAM_PASSWORD = (os.environ.get("STEAM_PASSWORD"),)
-STEAM_USERNAME = (os.environ.get("STEAM_USERNAME"),)
+STEAM_PASSWORD = os.environ.get("STEAM_PASSWORD")
+STEAM_USERNAME = os.environ.get("STEAM_USERNAME")
 STEAM_WORKSHOP_API_URL = os.environ.get("STEAM_WORKSHOP_API_URL")
 STEAMCMD_PATH = os.environ.get("STEAMCMD_PATH")
 
