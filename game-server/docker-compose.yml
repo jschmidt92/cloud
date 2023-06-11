@@ -7,8 +7,8 @@ services:
     platform: linux/amd64
     container_name: Arma3Server
     network_mode: host
-    ports:
-      - 2302-2306:2302-2306/udp
+    # ports:
+    #   - 2302-2306:2302-2306/udp
     volumes:
       - './missions:/arma3/mpmissions'
       - './configs:/arma3/configs'
