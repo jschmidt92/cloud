@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-SogHqApplication<sog-hq-webservice>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "org.a3sog.hq.SogHqApplication",
+      "projectName": "sog-hq-webservice",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
