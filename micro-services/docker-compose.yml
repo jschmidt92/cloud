@@ -5,13 +5,15 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=arma
       - MONGO_INITDB_ROOT_PASSWORD=arma
-    volumes:
-      - mongo:/data
+    expose:
+      - 27017
     ports:
       - 27017:27017
+    volumes:
+      - mongo:/data
+    restart: unless-stopped
     networks:
       - mongo
-    restart: unless-stopped
   mongo-express:
     container_name: mongo_express
     image: mongo-express
@@ -19,23 +21,113 @@ services:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=arma
       - ME_CONFIG_MONGODB_ADMINPASSWORD=arma
       - ME_CONFIG_MONGODB_SERVER=mongodb
+    expose:
+      - 8081
     ports:
       - 8081:8081
+    restart: unless-stopped
     networks:
       - mongo
-    restart: unless-stopped
+    depends_on:
+      - mongodb
   zipkin:
     container_name: zipkin
     image: openzipkin/zipkin
+    expose:
+      - 9411
     ports:
       - 9411:9411
     networks:
       - zipkin
+  client-service:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.layered
+    expose:
+      - 8083
+    ports:
+      - 8083:8083
+    volumes:
+      - ./client:/app
+    restart: unless-stopped
+    networks:
+      - sogNet
+    depends_on:
+      - config-server
+      - discovery-service
+      - gateway-service
+      - mongodb
+  config-server:
+    build:
+      context: ./config
+      dockerfile: Dockerfile.layered
+    expose:
+      - 8888
+    ports:
+      - 8888:8888
+    volumes:
+      - ./config:/app
+    restart: unless-stopped
+    networks:
+      - sogNet
+    depends_on:
+      - mongodb
+  discovery-service:
+    build:
+      context: ./discovery
+      dockerfile: Dockerfile.layered
+    expose:
+      - 8761
+    ports:
+      - 8761:8761
+    volumes:
+      - ./discovery:/app
+    restart: unless-stopped
+    networks:
+      - sogNet
+    depends_on:
+      - config-server
+      - gateway-service
+  gateway-service:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile.layered
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    volumes:
+      - ./gateway:/app
+    restart: unless-stopped
+    networks:
+      - sogNet
+    depends_on:
+      - config-server
+  web-service:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.layered
+    expose:
+      - 8082
+    ports:
+      - 8082:8082
+    volumes:
+      - ./web:/app
+    restart: unless-stopped
+    networks:
+      - sogNet
+    depends_on:
+      - config-server
+      - discovery-service
+      - gateway-service
+      - mongodb
 
 networks:
   mongo:
     driver: bridge
   zipkin:
+    driver: bridge
+  sogNet:
     driver: bridge
 
 volumes:

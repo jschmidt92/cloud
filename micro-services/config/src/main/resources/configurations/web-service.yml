@@ -1,6 +1,6 @@
 eureka:
   instance:
-    hostname: localhost
+    hostname: discovery-service
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
@@ -21,7 +21,7 @@ spring:
 
 application:
   config:
-    characters-url: http://localhost:8222/api/v1/characters
+    characters-url: http://localhost:8080/api/v1/characters
 
 management:
   tracing:
