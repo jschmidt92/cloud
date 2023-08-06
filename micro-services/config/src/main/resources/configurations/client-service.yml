@@ -1,0 +1,25 @@
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+server:
+  port: 8083
+spring:
+  application:
+    name: client-service
+  data:
+    mongodb:
+      username: arma
+      password: arma
+      host: localhost
+      port: 27017
+      database: arma
+      authentication-database: admin
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
