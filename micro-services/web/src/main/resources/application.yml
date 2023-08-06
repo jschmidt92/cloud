@@ -1,9 +1,29 @@
 spring:
   application:
     name: web-service
+  profiles:
+    default: dev
+
+---
+
+spring:
+  profiles:
+    active: dev
   config:
     import: optional:configserver:http://localhost:8888
 
 application:
   config:
     characters-url: http://localhost:8080/api/v1/characters
+
+---
+
+spring:
+  profiles:
+    active: prod
+  config:
+    import: optional:configserver:http://config-server:8888
+
+application:
+  config:
+    characters-url: http://client-service:8080/api/v1/characters

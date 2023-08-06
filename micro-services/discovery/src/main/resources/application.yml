@@ -1,5 +1,21 @@
 spring:
-  config:
-    import: optional:configserver:http://localhost:8888
   application:
     name: discovery-service
+  profiles:
+    default: dev
+
+---
+
+spring:
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://localhost:8888
+
+---
+
+spring:
+  profiles:
+    active: prod
+  config:
+    import: optional:configserver:http://config-server:8888

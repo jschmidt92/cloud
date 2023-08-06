@@ -40,9 +40,12 @@ services:
     networks:
       - zipkin
   client-service:
+    container_name: client-service
     build:
       context: ./client
       dockerfile: Dockerfile.layered
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
     expose:
       - 8083
     ports:
@@ -58,6 +61,7 @@ services:
       - gateway-service
       - mongodb
   config-server:
+    container_name: config-server
     build:
       context: ./config
       dockerfile: Dockerfile.layered
@@ -73,9 +77,12 @@ services:
     depends_on:
       - mongodb
   discovery-service:
+    container_name: discovery-service
     build:
       context: ./discovery
       dockerfile: Dockerfile.layered
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
     expose:
       - 8761
     ports:
@@ -88,10 +95,14 @@ services:
     depends_on:
       - config-server
       - gateway-service
+      - zipkin
   gateway-service:
+    container_name: gateway-service
     build:
       context: ./gateway
       dockerfile: Dockerfile.layered
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
     expose:
       - 8080
     ports:
@@ -104,9 +115,12 @@ services:
     depends_on:
       - config-server
   web-service:
+    container_name: web-service
     build:
       context: ./web
       dockerfile: Dockerfile.layered
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
     expose:
       - 8082
     ports:
