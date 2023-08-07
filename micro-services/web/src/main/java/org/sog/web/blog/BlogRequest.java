@@ -1,10 +1,18 @@
 package org.sog.web.blog;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.sog.web.user.User;
 
 import java.util.List;
 
-public class BlogDTO {
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class BlogRequest {
     private String id;
     private String title;
     private String date;

@@ -3,7 +3,7 @@ eureka:
     hostname: discovery-service
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://discovery-service:8761/eureka
 
 server:
   port: 8082
@@ -14,14 +14,14 @@ spring:
     mongodb:
       username: arma
       password: arma
-      host: localhost
+      host: mongodb
       port: 27017
       database: webapp
       authentication-database: admin
 
 application:
   config:
-    characters-url: http://localhost:8080/api/v1/characters
+    characters-url: http://client-service:8083/api/v1/characters
 
 management:
   tracing:

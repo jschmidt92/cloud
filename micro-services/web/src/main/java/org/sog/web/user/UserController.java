@@ -1,6 +1,7 @@
 package org.sog.web.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,35 +11,41 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService service;
+    private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<String> save(
-            @RequestBody User user
-    ) {
-        return ResponseEntity.ok(service.save(user));
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createBlog(@RequestBody UserRequest userRequest) {
+        userService.createUser(userRequest);
     }
+
     @GetMapping
-    public ResponseEntity<List<User>> findAllUsers() {
-        return ResponseEntity.ok(service.findAll());
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserResponse> getAllBlogs() {
+        return userService.getAllUsers();
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(
-            @PathVariable("id") String userId
+    @ResponseStatus(HttpStatus.FOUND)
+    public UserResponse findBlogById(
+            @PathVariable("id") String id
     ) {
-        return ResponseEntity.ok(service.findById(userId));
+        return userService.getUserById(id);
     }
+
     @GetMapping("/characters/{uid}")
     public ResponseEntity<FullUserResponse> findByUid(
             @PathVariable("uid") String uid
     ) {
-        return ResponseEntity.ok(service.findUsersWithCharacters(uid));
+        return ResponseEntity.ok(userService.findUsersWithCharacters(uid));
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable("id") String userId
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteBlog(
+            @PathVariable("id") String id
     ) {
-        service.delete(userId);
-        return ResponseEntity.accepted().build();
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

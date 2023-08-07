@@ -1,6 +1,7 @@
 package org.sog.web.blog;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,29 +11,34 @@ import java.util.List;
 @RequestMapping("/api/v1/blogs")
 @RequiredArgsConstructor
 public class BlogController {
-    private final BlogService service;
+    private final BlogService blogService;
 
     @PostMapping
-    public ResponseEntity<String> save(
-            @RequestBody Blog blog
-    ) {
-        return ResponseEntity.ok(service.save(blog));
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createBlog(@RequestBody BlogRequest blogRequest) {
+        blogService.createBlog(blogRequest);
     }
+
     @GetMapping
-    public ResponseEntity<List<Blog>> findAll() {
-        return ResponseEntity.ok(service.findAll());
+    @ResponseStatus(HttpStatus.OK)
+    public List<BlogResponse> getAllBlogs() {
+        return blogService.getAllBlogs();
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Blog> findById(
-            @PathVariable("id") String blogId
+    @ResponseStatus(HttpStatus.FOUND)
+    public BlogResponse findBlogById(
+            @PathVariable("id") String id
     ) {
-        return ResponseEntity.ok(service.findById(blogId));
+        return blogService.getBlogById(id);
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable("id") String blogId
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteBlog(
+            @PathVariable("id") String id
     ) {
-        service.delete(blogId);
-        return ResponseEntity.accepted().build();
+        blogService.deleteBlog(id);
+        return ResponseEntity.noContent().build();
     }
 }

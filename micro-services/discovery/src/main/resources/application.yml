@@ -1,21 +1,34 @@
+eureka:
+  instance:
+    hostname: discovery-service
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+server:
+  port: 8761
 spring:
   application:
     name: discovery-service
-  profiles:
-    default: dev
-
----
-
-spring:
-  profiles:
-    active: dev
-  config:
-    import: optional:configserver:http://localhost:8888
-
----
-
-spring:
-  profiles:
-    active: prod
   config:
     import: optional:configserver:http://config-server:8888
+#  profiles:
+#    default: dev
+
+#---
+
+#spring:
+#  profiles:
+#    active: dev
+#  config:
+#    import: optional:configserver:http://localhost:8888
+
+#---
+
+#spring:
+#  profiles:
+#    active: prod
+#  config:
+#    import: optional:configserver:http://config-server:8888

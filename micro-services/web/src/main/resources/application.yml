@@ -1,29 +1,58 @@
+eureka:
+  instance:
+    hostname: discovery-service
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka
+
+server:
+  port: 8082
 spring:
   application:
     name: web-service
-  profiles:
-    default: dev
-
----
-
-spring:
-  profiles:
-    active: dev
-  config:
-    import: optional:configserver:http://localhost:8888
-
-application:
-  config:
-    characters-url: http://localhost:8080/api/v1/characters
-
----
-
-spring:
-  profiles:
-    active: prod
   config:
     import: optional:configserver:http://config-server:8888
+  data:
+    mongodb:
+      username: arma
+      password: arma
+      host: mongodb
+      port: 27017
+      database: webapp
+      authentication-database: admin
+#  profiles:
+#    default: dev
 
 application:
   config:
     characters-url: http://client-service:8080/api/v1/characters
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+
+#---
+
+#spring:
+#  profiles:
+#    active: dev
+#  config:
+#    import: optional:configserver:http://localhost:8888
+#
+#application:
+#  config:
+#    characters-url: http://localhost:8080/api/v1/characters
+
+#---
+
+#spring:
+#  profiles:
+#    active: prod
+#  config:
+#    import: optional:configserver:http://config-server:8888
+#
+#application:
+#  config:
+#    characters-url: http://client-service:8080/api/v1/characters
